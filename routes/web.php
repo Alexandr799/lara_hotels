@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Hotel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +19,18 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/hotels', function () {
-    return view('hotels.index');
+    return view('hotels.index', ['hotels' => Hotel::all()]);
 })->name('hotels.index');
 
 Route::get('/bookings', function () {
     return view('bookings.index');
 })->name('bookings.index');
+
+Route::get('/hotels/{hotel}', function (Hotel $hotel) {
+    return view('hotels.show', ['hotel' => $hotel, 'rooms' => $hotel->rooms()->get()]);
+})->name('hotels.show');
+
+Route::post('/bookings/store', function (Hotel $hotel) {
+    $hotel->load('rooms');
+    return view('hotels.show', ['hotel' => $hotel, 'rooms' => $hotel->rooms()->get()]);
+})->name('bookings.store');

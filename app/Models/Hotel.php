@@ -26,8 +26,17 @@ class Hotel extends Model
         return $this->hasMany(Room::class);
     }
 
+    public function price(){
+        return $this->hasMany(Room::class)->min('price');
+    }
+
     public function facilities()
     {
-        return $this->belongsTo(Facility::class, 'facility_hotels', 'hotel_id', 'facility_id');
+        return $this->belongsToMany(
+            Facility::class,
+            'facility_hotels',
+            'hotel_id',
+            'facility_id'
+        );
     }
 }

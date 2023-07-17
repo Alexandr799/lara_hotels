@@ -13,15 +13,15 @@
             </div>
             <div>
                     @foreach($room->facilities as $facility)
-                        <span>• {{ $facility->name }} </span>
+                        <span>• {{ $facility->title }} </span>
                     @endforeach
             </div>
         </div>
         <hr>
         <div class="flex justify-end pt-2">
             <div class="flex flex-col">
-                <span class="text-lg font-bold">{{ $room->total_price }} руб.</span>
-                <span>за {{ $room->total_days }} ночей</span>
+                <span class="text-lg font-bold">{{ $room->price }} руб.</span>
+                <span>за {{ 1 }} ночей</span>
             </div>
             <form class="ml-4" method="POST" action="{{ route('bookings.store') }}">
                 @csrf

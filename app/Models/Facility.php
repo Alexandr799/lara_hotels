@@ -22,11 +22,11 @@ class Facility extends Model
 
     public function hotels()
     {
-        return $this->belongsTo(Hotel::class, 'facility_hotels', 'facility_id', 'hotel_id');
+        return $this->belongsToMany(Hotel::class, 'facility_hotels', 'facility_id', 'hotel_id');
     }
 
     public function rooms()
     {
-        return $this->belongsTo(Hotel::class, 'facility_rooms', 'facility_id', 'room_id');
+        return $this->belongsToMany(Room::class, 'facility_rooms', 'facility_id', 'room_id');
     }
 }
