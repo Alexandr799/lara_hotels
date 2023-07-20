@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-layouts.guest-layout>
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
@@ -9,14 +9,14 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register.store') }}" novalidate>
             @csrf
 
             <!-- Name -->
             <div>
-                <x-label for="name" :value="__('Name')" />
+                <x-label for="full_name" :value="__('Name')" />
 
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                <x-input id="full_name" class="block mt-1 w-full" type="text" name="full_name" :value="old('name')" required autofocus />
             </div>
 
             <!-- Email Address -->
@@ -56,4 +56,4 @@
             </div>
         </form>
     </x-auth-card>
-</x-guest-layout>
+</x-layouts.guest-layout>
