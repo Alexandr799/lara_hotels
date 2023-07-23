@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Hotel;
 use Illuminate\Support\Facades\Route;
@@ -49,5 +50,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [RegisterController::class, 'store'])
         ->name('register.store');
 
-    Route::post('/login', [RegisterController::class, 'login'])->name('login');
+    Route::get('/login', [LoginController::class, 'create'])->name('login');
+
+    Route::post('/login', [LoginController::class, 'store']);
 });
