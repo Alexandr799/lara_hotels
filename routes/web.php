@@ -29,6 +29,7 @@ Route::get('/hotels/{hotel}', function (Hotel $hotel) {
 
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/bookings', function () {
         return view('bookings.index', ['bookings'=>[]]);
     })->name('bookings.index');
@@ -37,6 +38,8 @@ Route::middleware('auth')->group(function () {
         $hotel->load('rooms');
         return view('hotels.show', ['hotel' => $hotel, 'rooms' => $hotel->rooms()->get()]);
     })->middleware('auth')->name('bookings.store');
+
+    Route::post('/logout', [RegisterController::class, 'logout'])->name('logout');
 });
 
 Route::middleware('guest')->group(function () {
@@ -46,16 +49,5 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [RegisterController::class, 'store'])
         ->name('register.store');
 
-    Route::get('/login', function () {
-        return view('auth.login');
-    })->name('login');
-
-    Route::post('/login', function () {
-        return view('auth.login');
-    })->name('login');
+    Route::post('/login', [RegisterController::class, 'login'])->name('login');
 });
-
-
-Route::post('/logout', function () {
-    return view('index');
-})->name('logout');
