@@ -20,9 +20,11 @@ class LoginController extends Controller
             "password" => 'required|string',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))){
-            return redirect(RouteServiceProvider::HOME);
+
+        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))){
+            return redirect()->intended(RouteServiceProvider::HOME);
         } else {
+            $request->session()->regenerate();
             return redirect()->back()->withInput()->withErrors(['noAuth'=>'No auth! Email or password is wrong!']);
         }
     }

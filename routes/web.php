@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
 use App\Models\Hotel;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,7 @@ Route::get('/hotels', function () {
 })->name('hotels.index');
 
 Route::get('/hotels/{hotel}', function (Hotel $hotel) {
+    $hotel->load('rooms');
     return view('hotels.show', ['hotel' => $hotel, 'rooms' => $hotel->rooms()->get()]);
 })->name('hotels.show');
 
@@ -32,15 +35,14 @@ Route::get('/hotels/{hotel}', function (Hotel $hotel) {
 Route::middleware('auth')->group(function () {
 
     Route::get('/bookings', function () {
-        return view('bookings.index', ['bookings'=>[]]);
+        return view('bookings.index', ['bookings' => []]);
     })->name('bookings.index');
 
-    Route::post('/bookings/store', function (Hotel $hotel) {
-        $hotel->load('rooms');
-        return view('hotels.show', ['hotel' => $hotel, 'rooms' => $hotel->rooms()->get()]);
-    })->middleware('auth')->name('bookings.store');
+    Route::post('/bookings/store', function () {
+        return 'Тестовое бронирование';
+    })->name('bookings.store');
 
-    Route::post('/logout', [RegisterController::class, 'logout'])->name('logout');
+    Route::post('/logout', [RegisterController::class, 'destroy'])->name('logout');
 });
 
 Route::middleware('guest')->group(function () {
@@ -49,6 +51,18 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/register', [RegisterController::class, 'store'])
         ->name('register.store');
+
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])
+        ->name('password.request');
+
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])
+        ->name('password.email');
+
+    Route::get('/reset-password', [ResetPasswordController::class, 'create'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [ResetPasswordController::class, 'store'])
+        ->name('password.update');
 
     Route::get('/login', [LoginController::class, 'create'])->name('login');
 

@@ -33,9 +33,11 @@ class RegisterController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
 
-    public function logout(Request $request)
+    public function destroy(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerate();
         return redirect('/');
     }
 }

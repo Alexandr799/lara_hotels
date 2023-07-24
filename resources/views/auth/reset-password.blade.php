@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-layouts.guest-layout>
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
@@ -13,7 +13,7 @@
             @csrf
 
             <!-- Password Reset Token -->
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <input type="hidden" name="token" value="{{ $request->input('token') }}">
 
             <!-- Email Address -->
             <div>
@@ -45,4 +45,4 @@
             </div>
         </form>
     </x-auth-card>
-</x-guest-layout>
+</x-layouts.guest-layout>
