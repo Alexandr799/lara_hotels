@@ -9,7 +9,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-        <form method="POST" action="{{ route('register.store') }}" novalidate>
+        <form method="POST" action="{{ route('register.store') }}">
             @csrf
 
             <!-- Name -->
