@@ -2,17 +2,19 @@
     <div class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
         <div class="grid grid-cols-3 md:grid-cols-2 gap-4 my-4">
             <div>
-                <form method="get" action="{{route('hotels.index')}}" class="grid grid-cols-1  gap-4 p-5 rounded border-black border-2">
+                <form method="get" action="{{route('hotels.index')}}" novalidate
+                    class="grid grid-cols-1  gap-4 p-5 rounded border-black border-2">
+                    <x-auth-validation-errors class="mb-4" :errors="$errors" />
                     <h3 class="text-2xl font-semibold">Фильтры</h3>
                     <div>
                         <x-label for="min_price" :value="__('Min price')" />
-                        <x-input min="0"  id="min_price" class="block mt-1 w-full"
-                            type="number" name="min_price" placeholder="{{$minPrice}}" />
+                        <x-input min="0" id="min_price" class="block mt-1 w-full" type="number" name="min_price"
+                            value="{{$minPrice}}" />
                     </div>
                     <div>
                         <x-label for="max_price" :value="__('Max price')" />
-                        <x-input min="0" id="max_price" class="block mt-1 w-full"
-                            type="number" name="max_price" placeholder="{{$maxPrice}}" />
+                        <x-input min="0" id="max_price" class="block mt-1 w-full" type="number" name="max_price"
+                            value="{{$maxPrice}}" />
                     </div>
                     <div>
                         <x-dropdown align="left" type="submit" class=" h-full" :closeContentOnClick="true">
@@ -24,8 +26,8 @@
                                 @foreach ($facilities as $facility)
                                 <div>
                                     <label for="{{$facility->title . '_facilities'}}">
-                                        <input value="{{$facility->title}}"
-                                        @if (in_array($facility->title, $facilitiesChecked))
+                                        <input value="{{$facility->title}}" @if (in_array($facility->title,
+                                        $facilitiesChecked))
                                         checked
                                         @endif
                                         type="checkbox" name="facilities[]"

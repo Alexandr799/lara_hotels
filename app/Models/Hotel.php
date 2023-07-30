@@ -48,37 +48,6 @@ class Hotel extends Model
         );
     }
 
-    public static function hotelsPrice(Request $request, $type = 'min')
-    {
-        $minPrice = $request->get('min_price', null);
-        $maxPrice = $request->get('max_price', null);
-        $facilitiesList =  $request->get('facilitiesList', []);
-
-        $hotels = DB::table('hotels')
-            ->join('rooms', 'hotels.id', '=', 'rooms.hotel_id')
-            ->join('facility_hotels', 'hotels.id', '=', 'facility_hotels.hotel_id')
-            ->join('facilities', 'facility_hotels.facility_id', '=', 'facilities.id')
-            ->select(DB::raw("MIN(rooms.price) as price"))
-            ->groupBy('hotels.id');
-
-        if (isset($minPrice)) {
-            $hotels->havingRaw('price > ?', [$minPrice]);
-        }
-
-        if (isset($maxPrice)) {
-            $hotels->havingRaw('price > ?', [$maxPrice]);
-        }
-
-        if (count($facilitiesList) > 0) {
-            $hotels->whereIn('facilities.title', $facilitiesList);
-        }
-        if ($type === 'min') {
-            return $hotels->orderBy('price')->pluck('price')->first();
-        } else {
-            return $hotels->orderByDesc('price')->pluck('price')->first();
-        }
-    }
-
     public static function hotelsWithFacilitiesAndPrice(Request $request)
     {
         $minPrice = $request->get('min_price', null);
@@ -88,7 +57,7 @@ class Hotel extends Model
         $hotels = DB::table('hotels')
             ->join('rooms', 'hotels.id', '=', 'rooms.hotel_id')
             ->joinSub(
-                function ($query) use ($facilitiesList) {
+                function ($query) {
                     $query->select(
                         'hotel_id',
                         DB::raw('GROUP_CONCAT(facilities.title SEPARATOR ",") AS title')
