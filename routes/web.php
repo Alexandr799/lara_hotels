@@ -7,7 +7,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\HotelController;
 use App\Http\Controllers\PasswordVerifyController;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,9 +25,8 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
-Route::get('/hotels', function () {
-    return view('hotels.index', ['hotels' => Hotel::all()]);
-})->name('hotels.index');
+Route::get('/hotels', [HotelController::class, 'index'])
+    ->name('hotels.index');
 
 Route::get('/hotels/{hotel}', function (Hotel $hotel) {
     $hotel->load('rooms');
@@ -88,3 +89,7 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/login', [LoginController::class, 'store']);
 });
+
+Route::get('/test-route', function(Request $request) {
+    dd($request->all());
+})->name('test');

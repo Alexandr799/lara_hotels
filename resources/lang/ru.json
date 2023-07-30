@@ -19,5 +19,7 @@
     "Remember me": "Запомнить меня",
     "Register": "Зарегистрироваться",
     "Confirm Password": "Повторите пароль",
-    "Whoops! Something went wrong.":"Упс, что-то пошло не так."
+    "Whoops! Something went wrong.":"Упс, что-то пошло не так.",
+    "Max price":"Максимальная цена",
+    "Min price":"Минимальная цена"
 }
