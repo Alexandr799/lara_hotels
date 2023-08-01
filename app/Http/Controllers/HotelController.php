@@ -11,14 +11,18 @@ class HotelController extends Controller
     function index(Request $request)
     {
         $request->validate([
-            'min_price'=>['numeric', 'min:0'],
-            'max_price'=>['numeric', 'min:1'],
+            'min_price'=>['nullable', 'numeric', 'min:0'],
+            'max_price'=>['nullable', 'numeric', 'min:0'],
             'facilities' => ['array','exists:facilities,title']
         ]);
 
         $perPage = 10;
         $currentPage = $request->get('page', 1);
-        $hotels = Hotel::hotelsWithFacilitiesAndPrice($request);
+        $hotels = Hotel::hotelsWithFacilitiesAndPrice([
+            'min_price' => $request->get('min_price', null),
+            'max_price' => $request->get('max_price', null),
+            'facilitiesList' =>  $request->get('facilities', [])
+        ]);
         $facilitiesChecked =  $request->get('facilities', []);
 
         $minPrice = $request->get('min_price', null);

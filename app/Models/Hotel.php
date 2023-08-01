@@ -48,11 +48,11 @@ class Hotel extends Model
         );
     }
 
-    public static function hotelsWithFacilitiesAndPrice(Request $request)
+    public static function hotelsWithFacilitiesAndPrice(array $params)
     {
-        $minPrice = $request->get('min_price', null);
-        $maxPrice = $request->get('max_price', null);
-        $facilitiesList =  $request->get('facilities', []);
+        $minPrice = $params['min_price'] ?? null;
+        $maxPrice = $params['max_price'] ?? null;
+        $facilitiesList = $params['facilitiesList'] ?? [];
 
         $hotels = DB::table('hotels')
             ->join('rooms', 'hotels.id', '=', 'rooms.hotel_id')
