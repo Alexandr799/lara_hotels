@@ -27,8 +27,9 @@ class HotelController extends Controller
             'min_price' => $minPrice,
             'max_price' => $maxPrice,
             'facilitiesList' =>  $facilitiesChecked
-        ])->get()->map(function ($hotel) {
+        ])->get()->map(function ($hotel) use ($facilitiesChecked) {
             $hotel->facilities = explode(',', $hotel->facilities);
+            $hotel->facilities = array_reverse(array_merge($hotel->facilities, $facilitiesChecked));
             return $hotel;
         });
 

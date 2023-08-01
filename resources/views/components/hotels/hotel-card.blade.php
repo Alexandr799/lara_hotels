@@ -4,7 +4,8 @@
         <div>
             <a class="block text-grey-darkest mb-2 font-bold"
                 href="{{ route('hotels.show', ['hotel' => $hotel->id]) }}">{{
-                $hotel->name }}</a>
+                $hotel->name }}
+            </a>
             <div class="text-xs">
                 {{ $hotel->address }}
             </div>
@@ -14,18 +15,20 @@
             <span class="text-lg"> за ночь</span>
         </div>
         @if(count($hotel->facilities) > 0)
-        <div class="flex items-center py-2">
-            @foreach($hotel->facilities as $key=>$title)
-            @if ($key<2)
-                <div class="pr-2 text-xs">
-                    <span>•</span> {{ $title }}
-                 </div>
-            @endif
-        @endforeach
-    </div>
-    @endif
-    <div class="flex justify-end">
-        <x-link-button href="{{ route('hotels.show', ['hotel' => $hotel->id]) }}">Подробнее</x-link-button>
+            <div class="flex items-center py-2">
+                @foreach($hotel->facilities as $key=>$title)
+                    @if ($key < 2)
+                        <div class="pr-2 text-xs">
+                            <span>•</span>
+                            <span>{{ $title }}</span>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        @endif
+        <div class="flex justify-end">
+            <x-link-button href="{{ route('hotels.show', ['hotel' => $hotel->id]) }}">Подробнее</x-link-button>
+        </div>
     </div>
 </div>
-</div>
+
