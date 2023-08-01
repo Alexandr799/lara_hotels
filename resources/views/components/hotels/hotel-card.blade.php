@@ -13,12 +13,9 @@
             от <span class="text-2xl text-grey-darkest">{{ $hotel->price }} ₽</span>
             <span class="text-lg"> за ночь</span>
         </div>
-        @php
-            $facilitiesArray = explode(',', $hotel->facilities);
-        @endphp
-        @if(count($facilitiesArray) > 0)
+        @if(count($hotel->facilities) > 0)
         <div class="flex items-center py-2">
-            @foreach(explode(',', $hotel->facilities) as $key=>$title)
+            @foreach($hotel->facilities as $key=>$title)
             @if ($key<2)
                 <div class="pr-2 text-xs">
                     <span>•</span> {{ $title }}
