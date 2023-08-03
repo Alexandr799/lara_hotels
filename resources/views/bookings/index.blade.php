@@ -6,6 +6,9 @@
                     @foreach($bookings as $booking)
                         <x-bookings.booking-card class="mb-4" :booking="$booking" :show-link="true"/>
                     @endforeach
+                    <div class="container mx-auto my-6">
+                        {{ $bookings->links() }}
+                    </div>
                 @else
                     <h1 class="text-lg md:text-xl font-semibold text-gray-800">Нет бронирований</h1>
                 @endif

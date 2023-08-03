@@ -62,7 +62,7 @@ class HotelController extends Controller
         return view('hotels.index', $params);
     }
 
-    function show($id, Request $request)
+    function show(Hotel $hotel, Request $request)
     {
         $validator = Validator::make(
             $request->all(),
@@ -78,10 +78,6 @@ class HotelController extends Controller
 
         $startDate = $request->get('start_date', date("Y-m-d"));
         $endDate = $request->get('end_date', date("Y-m-d", strtotime("+1 day", strtotime(date("Y-m-d")))));
-
-        $hotel = Hotel::where([
-            'id' => $id
-        ])->first();
 
         if (empty($hotel)){
             return abort(404);

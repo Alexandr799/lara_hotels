@@ -13,8 +13,8 @@ class BookController extends Controller
     function index(Request $request)
     {
         $bookings = Booking::where([
-            'user_id'=>Auth::id(),
-        ])->get();
+            'user_id' => Auth::id(),
+        ])->simplePaginate(5);
         return view('bookings.index', ['bookings' => $bookings]);
     }
 
@@ -60,5 +60,29 @@ class BookController extends Controller
         $book->save();
 
         return 'Успех';
+    }
+
+    function show(Booking $booking, Request $request)
+    {
+        $user = Auth::user();
+        return view('bookings.show', [
+            'booking' => $booking,
+            'email' => $user->email,
+            'name' => $user->name,
+        ]);
+    }
+
+    function delete(Request $request)
+    {
+        $request->validate([
+            "booking_id"=>['required']
+        ]);
+
+        Booking::where([
+            'user_id'=>Auth::user()->id,
+            'id'=>$request->get('booking_id')
+        ])->delete();
+
+        return view('bookings.delete');
     }
 }

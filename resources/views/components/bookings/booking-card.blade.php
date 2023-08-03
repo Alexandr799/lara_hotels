@@ -10,6 +10,15 @@
             <div class="flex">
                 <x-link-button href="{{ route('bookings.show', ['booking' => $booking]) }}">Подробнее</x-link-button>
             </div>
+            @else
+            <form action="{{route('bookings.delete')}}" method="POST">
+                @csrf
+                @method('DELETE')
+                <input name="booking_id" type="hidden"  value="{{$booking->id}}">
+                <x-button style="text-align: center;display:block;">
+                    Отменить бронирование
+                </x-button>
+            </form>
             @endif
         </div>
         <div class="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:space-x-6 w-full">

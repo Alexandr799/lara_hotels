@@ -29,7 +29,7 @@ Route::get('/', function () {
 Route::get('/hotels', [HotelController::class, 'index'])
     ->name('hotels.index');
 
-Route::get('/hotels/{id}', [HotelController::class, 'show'])
+Route::get('/hotels/{hotel}', [HotelController::class, 'show'])
     ->name('hotels.show');
 
 
@@ -38,8 +38,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/bookings', [BookController::class, 'index'])
         ->middleware('verified')->name('bookings.index');
 
-    Route::get('/bookings/{booking}', [BookController::class, 'index'])
+    Route::get('/bookings/{booking}', [BookController::class, 'show'])
         ->middleware('verified')->name('bookings.show');
+
+    Route::delete('/bookings', [BookController::class, 'delete'])
+        ->middleware(['verified', 'password.confirm'])->name('bookings.delete');
 
     Route::post('/bookings/store', [BookController::class, 'store'])
         ->middleware('verified')->name('bookings.store');
@@ -89,7 +92,3 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/login', [LoginController::class, 'store']);
 });
-
-Route::get('/test-route', function (Request $request) {
-    dd($request->all());
-})->name('test');
