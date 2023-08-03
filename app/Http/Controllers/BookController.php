@@ -37,7 +37,7 @@ class BookController extends Controller
         )->stopOnFirstFailure();
 
         if ($validator->fails()) {
-            redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $date1 = new \DateTime($request->input('started_at'));
