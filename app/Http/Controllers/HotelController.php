@@ -75,9 +75,7 @@ class HotelController extends Controller
             'id' => $id
         ])->first();
 
-        $rooms = Room::where([
-            'hotel_id' => $id
-        ])->get();
+        $rooms = Room::getAvailableRoomsInHotel($hotel->id, $startDate, $endDate);
 
         return view(
             'hotels.show',
