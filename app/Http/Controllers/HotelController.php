@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Hotel;
 use App\Models\Facility;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Validator;
 
 class HotelController extends Controller
 {
@@ -58,5 +60,31 @@ class HotelController extends Controller
         ];
 
         return view('hotels.index', $params);
+    }
+
+    function show($id, Request $request)
+    {
+        $request->validate([
+            'start_date' => ['date', 'date_format:Y-m-d', 'required_with:end_date'],
+            'end_date' => ['date', 'date_format:Y-m-d', 'required_with:start_date', 'after:start_date'],
+        ]);
+
+        $startDate = $request->get('start_date', date("Y-m-d"));
+        $endDate = $request->get('end_date', date("Y-m-d", strtotime("+1 day", strtotime(date("Y-m-d")))));
+        $hotel = Hotel::where([
+            'id' => $id
+        ])->first();
+
+        $rooms = Room::where([
+            'hotel_id' => $id
+        ])->get();
+
+        return view(
+            'hotels.show',
+            [
+                'hotel' => $hotel,
+                'rooms' => $rooms,
+            ]
+        );
     }
 }

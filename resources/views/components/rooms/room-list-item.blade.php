@@ -19,14 +19,29 @@
         </div>
         <hr>
         <div class="flex justify-end pt-2">
+            @php
+                $date1 = request()->get('start_date', \Carbon\Carbon::now()->format('d-m-Y'));
+                $date2 = request()->get('end_date', \Carbon\Carbon::now()->addDay()->format('d-m-Y'));
+                // Создаем объекты DateTime для каждой даты
+                $dateTime1 = new DateTime($date1);
+                $dateTime2 = new DateTime($date2);
+                // Вычисляем разницу между датами
+                $interval = $dateTime1->diff($dateTime2);
+                // Получаем разницу в днях
+                $daysDifference = $interval->days;
+            @endphp
             <div class="flex flex-col">
-                <span class="text-lg font-bold">{{ $room->price }} руб.</span>
-                <span>за {{ 1 }} ночей</span>
+                <span class="text-lg font-bold">{{ $room->price * $daysDifference}} руб.</span>
+                <span>за {{ $daysDifference }} ночей</span>
             </div>
             <form class="ml-4" method="POST" action="{{ route('bookings.store') }}">
                 @csrf
-                <input type="hidden" name="started_at" value="{{ request()->get('start_date', \Carbon\Carbon::now()->format('d-m-Y')) }}">
-                <input type="hidden" name="finished_at" value="{{ request()->get('end_date', \Carbon\Carbon::now()->format('d-m-Y')) }}">
+                <input type="hidden" name="started_at"
+                value="{{ request()->get('start_date', \Carbon\Carbon::now()->format('d-m-Y')) }}">
+                <input
+                type="hidden"
+                name="finished_at"
+                value="{{ request()->get('end_date', \Carbon\Carbon::now()->addDay()->format('d-m-Y')) }}">
                 <input type="hidden" name="room_id" value="{{ $room->id }}">
                 <x-the-button class=" h-full w-full">{{ __('Book') }}</x-the-button>
             </form>

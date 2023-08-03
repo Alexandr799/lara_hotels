@@ -20,20 +20,24 @@
         </div>
         <div class="flex flex-col">
             <div class="text-2xl text-center md:text-start font-bold">Забронировать комнату</div>
-
+            <x-form-validation-errors :errors="$errors"/>
             <form method="get" action="{{ url()->current() }}">
                 <div class="flex my-6">
                     <div class="flex items-center mr-5">
                         <div class="relative">
-                            <input name="start_date" min="{{ date('Y-m-d') }}" value="{{ $startDate }}"
-                                   placeholder="Дата заезда" type="date"
-                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
+                            <input name="start_date"
+                            min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                            value="{{ request()->get('start_date', \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                            placeholder="Дата заезда" type="date"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
                         </div>
                         <span class="mx-4 text-gray-500">по</span>
                         <div class="relative">
-                            <input name="end_date" type="date" min="{{ date('Y-m-d') }}" value="{{ $endDate }}"
-                                   placeholder="Дата выезда"
-                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
+                            <input name="end_date" type="date"
+                            min="{{ \Carbon\Carbon::now()->addDay()->format('Y-m-d') }}"
+                            value="{{ request()->get('end_date', \Carbon\Carbon::now()->addDay()->format('Y-m-d')) }}"
+                            placeholder="Дата выезда"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
                         </div>
                     </div>
                     <div>
@@ -44,7 +48,7 @@
             @if($startDate && $endDate)
                 <div class="flex flex-col w-full lg:w-4/5">
                     @foreach($rooms as $room)
-                        <x-rooms.room-list-item :room="$room" class="mb-4"/>
+                        <x-rooms.room-list-item  :room="$room" class="mb-4"/>
                     @endforeach
                 </div>
             @else

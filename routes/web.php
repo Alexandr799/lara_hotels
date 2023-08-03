@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Models\Hotel;
 use Illuminate\Support\Facades\Route;
@@ -28,21 +29,17 @@ Route::get('/', function () {
 Route::get('/hotels', [HotelController::class, 'index'])
     ->name('hotels.index');
 
-Route::get('/hotels/{hotel}', function (Hotel $hotel) {
-    $hotel->load('rooms');
-    return view('hotels.show', ['hotel' => $hotel, 'rooms' => $hotel->rooms()->get()]);
-})->name('hotels.show');
+Route::get('/hotels/{id}', [HotelController::class, 'show'])
+    ->name('hotels.show');
 
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/bookings', function () {
-        return view('bookings.index', ['bookings' => []]);
-    })->middleware('verified')->name('bookings.index');
+    Route::get('/bookings', [BookController::class, 'index'])
+        ->middleware('verified')->name('bookings.index');
 
-    Route::post('/bookings/store', function () {
-        return 'Тестовое бронирование';
-    })->middleware('verified')->name('bookings.store');
+    Route::post('/bookings/store', [BookController::class, 'store'])
+        ->middleware('verified')->name('bookings.store');
 
     Route::post('/logout', [RegisterController::class, 'destroy'])
         ->name('logout');
@@ -90,6 +87,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'store']);
 });
 
-Route::get('/test-route', function(Request $request) {
+Route::get('/test-route', function (Request $request) {
     dd($request->all());
 })->name('test');

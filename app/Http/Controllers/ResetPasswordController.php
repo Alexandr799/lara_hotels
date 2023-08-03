@@ -20,17 +20,17 @@ class ResetPasswordController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'token' => 'required|string',
-            "email" => 'required|string|email',
-            "password" => 'required|confirmed|min:8',
+            'token' => ['required', 'string'],
+            "email" => ['required', 'string', 'email'],
+            "password" => ['required','confirmed','min:8'],
         ]);
 
         $status = Password::reset(
             $request->only('email', 'password', 'token', 'password_confirmation'),
             function (User $user) use ($request) {
                 $user->forceFill([
-                    'password'=>Hash::make($request->password),
-                    'remember_token'=>Str::random(60)
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60)
                 ])->save();
             }
         );
