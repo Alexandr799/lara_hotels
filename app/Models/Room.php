@@ -54,10 +54,10 @@ class Room extends Model
     }
 
 
-    public static function getAvailableRoomsInHotel($hotel_id, $start_date, $end_date)
+    public static function availableRoomsInHotel($hotel_id, $start_date, $end_date)
     {
         $ids =  static::bookingOnDate($start_date, $end_date)->pluck('room_id')->toArray();
-        $rooms =  static::where('hotel_id', $hotel_id)->whereNotIn('id', $ids)->get();
+        $rooms =  static::where('hotel_id', $hotel_id)->whereNotIn('id', $ids);
         return $rooms;
     }
 }

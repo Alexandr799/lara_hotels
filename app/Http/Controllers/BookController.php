@@ -12,7 +12,10 @@ class BookController extends Controller
 {
     function index(Request $request)
     {
-        return view('bookings.index', ['bookings' => []]);
+        $bookings = Booking::where([
+            'user_id'=>Auth::id(),
+        ])->get();
+        return view('bookings.index', ['bookings' => $bookings]);
     }
 
     function store(Request $request)

@@ -50,6 +50,9 @@
                     @foreach($rooms as $room)
                         <x-rooms.room-list-item  :room="$room" class="mb-4"/>
                     @endforeach
+                    <div class="container mx-auto my-6">
+                        {{ $rooms->links() }}
+                    </div>
                 </div>
             @else
                 <div></div>

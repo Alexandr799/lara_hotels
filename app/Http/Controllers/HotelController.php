@@ -64,18 +64,30 @@ class HotelController extends Controller
 
     function show($id, Request $request)
     {
-        $request->validate([
-            'start_date' => ['date', 'date_format:Y-m-d', 'required_with:end_date'],
-            'end_date' => ['date', 'date_format:Y-m-d', 'required_with:start_date', 'after:start_date'],
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'start_date' => ['date', 'date_format:Y-m-d', 'required_with:end_date'],
+                'end_date' => ['date', 'date_format:Y-m-d', 'required_with:start_date', 'after:start_date'],
+            ]
+        )->stopOnFirstFailure();
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $startDate = $request->get('start_date', date("Y-m-d"));
         $endDate = $request->get('end_date', date("Y-m-d", strtotime("+1 day", strtotime(date("Y-m-d")))));
+
         $hotel = Hotel::where([
             'id' => $id
         ])->first();
 
-        $rooms = Room::getAvailableRoomsInHotel($hotel->id, $startDate, $endDate);
+        if (empty($hotel)){
+            return abort(404);
+        }
+
+        $rooms = Room::availableRoomsInHotel($hotel->id, $startDate, $endDate)->simplePaginate(5);
 
         return view(
             'hotels.show',

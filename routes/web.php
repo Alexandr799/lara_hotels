@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/bookings', [BookController::class, 'index'])
         ->middleware('verified')->name('bookings.index');
 
+    Route::get('/bookings/{booking}', [BookController::class, 'index'])
+        ->middleware('verified')->name('bookings.show');
+
     Route::post('/bookings/store', [BookController::class, 'store'])
         ->middleware('verified')->name('bookings.store');
 
