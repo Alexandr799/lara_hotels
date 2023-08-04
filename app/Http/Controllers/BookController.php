@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AcceptMail;
 use App\Models\Booking;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-    function index(Request $request)
+    function index()
     {
         $bookings = Booking::where([
             'user_id' => Auth::id(),
@@ -43,6 +45,8 @@ class BookController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $user = Auth::user();
+
         $date1 = new \DateTime($request->input('started_at'));
         $date2 = new \DateTime($request->input('finished_at'));
         $dayDiff = $date1->diff($date2)->days;
@@ -54,10 +58,12 @@ class BookController extends Controller
             'days' => $dayDiff,
             'price' => Room::find($roomId)->price * $dayDiff,
             'room_id' => $roomId,
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
         ]);
 
         $book->save();
+
+        Mail::to($user)->send(new AcceptMail($book, $user->full_name));
 
         return view('bookings.success', ['book_id' => $book->id]);
     }
