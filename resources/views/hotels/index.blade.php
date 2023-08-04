@@ -1,6 +1,6 @@
 <x-layouts.app-layout>
     <div class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
-        <div class="grid grid-cols-3 md:grid-cols-2 gap-4 my-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
             <div>
                 <form method="get" action="{{route('hotels.index')}}" novalidate
                     class="grid grid-cols-1  gap-4 p-5 rounded border-black border-2">

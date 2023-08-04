@@ -59,7 +59,7 @@ class BookController extends Controller
 
         $book->save();
 
-        return 'Успех';
+        return view('bookings.success', ['book_id' => $book->id]);
     }
 
     function show(Booking $booking, Request $request)
@@ -75,12 +75,12 @@ class BookController extends Controller
     function delete(Request $request)
     {
         $request->validate([
-            "booking_id"=>['required']
+            "booking_id" => ['required']
         ]);
 
         Booking::where([
-            'user_id'=>Auth::user()->id,
-            'id'=>$request->get('booking_id')
+            'user_id' => Auth::user()->id,
+            'id' => $request->get('booking_id')
         ])->delete();
 
         return view('bookings.delete');
