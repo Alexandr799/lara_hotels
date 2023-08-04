@@ -63,7 +63,7 @@ class BookController extends Controller
 
         $book->save();
 
-        Mail::to($user)->send(new AcceptMail($book, $user->full_name));
+        Mail::to($user)->send(new AcceptMail($book, $user->name));
 
         return view('bookings.success', ['book_id' => $book->id]);
     }
