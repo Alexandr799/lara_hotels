@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Orchid\Screen\AsSource;
 
 class Room extends Model
 {
-    use HasFactory;
+    use HasFactory, AsSource;
 
     /**
      * The attributes that are mass assignable.

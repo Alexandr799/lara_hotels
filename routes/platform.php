@@ -19,6 +19,8 @@ use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Email\EmailSenderScreen;
+use App\Orchid\Screens\Booking\BookingEditScreen;
+use App\Orchid\Screens\Booking\BookingListScreen;
 use App\Orchid\Screens\Hotel\HotelEditScreen;
 use App\Orchid\Screens\Hotel\HotelListScreen;
 
@@ -108,14 +110,36 @@ Route::screen('email', EmailSenderScreen::class)->name('platform.email')
         return $trail
             ->parent('platform.index')
             ->push('Email Sender');
-    });;
-
-
-Route::screen('hotel/{hotel?}', HotelEditScreen::class)
-    ->name('platform.hotel.edit');
+    });
 
 Route::screen('hotels', HotelListScreen::class)
-    ->name('platform.hotel.list');
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Hotels');
+    })->name('platform.hotel.list');
+
+Route::screen('hotel/{hotel?}', HotelEditScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.hotel.list')
+            ->push('Hotels edit');
+    })->name('platform.hotel.edit');
+
+
+Route::screen('booking', BookingListScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Bookings');
+    })->name('platform.booking.list');
+
+Route::screen('booking/{booking?}', BookingEditScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.booking.list')
+            ->push('Booking edit');
+    })->name('platform.booking.edit');
 
 
 //Route::screen('idea', Idea::class, 'platform.screens.idea');
