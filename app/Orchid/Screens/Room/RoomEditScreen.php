@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Room;
 
+use App\Models\Facility;
 use App\Models\Room;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class RoomEditScreen extends Screen
     {
         return [
             'room' => $room,
+            'facilities' =>  Facility::pluck('title', 'id')->all(),
         ];
     }
 
@@ -73,12 +75,19 @@ class RoomEditScreen extends Screen
     public function layout(): array
     {
         return [
+
             Layout::rows([
                 Input::make('room.title')
                     ->title('Title')
                     ->maxlength(100)
                     ->required()
                     ->placeholder('Input title room'),
+
+                Relation::make('room.facilities')
+                    ->title('Facilities')
+                    ->multiple()
+                    ->placeholder('Facilities input')
+                    ->fromModel(Facility::class, 'title', 'id'),
 
                 Relation::make('room.hotel_id')
                     ->title('Hotel')
@@ -123,6 +132,11 @@ class RoomEditScreen extends Screen
         $room = new Room($request->get('room'));
         $room->save();
 
+
+        $facilities = $request->get('room')['facilities'] ?? [];
+        $room->facilities()->detach();
+        $room->facilities()->attach($facilities);
+
         Alert::info('You have successfully created a room.');
 
         return redirect()->route('platform.room.list');
@@ -131,6 +145,10 @@ class RoomEditScreen extends Screen
     public function update(Room $room, Request $request)
     {
         $room->fill($request->get('room'))->save();
+
+        $facilities = $request->get('room')['facilities'] ?? [];
+        $room->facilities()->detach();
+        $room->facilities()->attach($facilities);
 
         Alert::info('You have successfully updated a room.');
 
