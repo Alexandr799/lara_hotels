@@ -40,12 +40,12 @@ class BookingListLayout extends Table
             TD::make('days', 'Nights count'),
             TD::make('started_at', 'Сheck-in'),
             TD::make('updated_at', 'Сheck-out'),
-            TD::make('updated_at', 'User')
+            TD::make('user_id', 'User')
                 ->render(function (Booking $booking) {
                     return  $booking->user->name;
                 }),
 
-            TD::make('updated_at', 'Room')
+            TD::make('room_id', 'Room')
                 ->render(function (Booking $booking) {
                     return  $booking->room->title;
                 }),

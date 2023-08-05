@@ -23,6 +23,8 @@ use App\Orchid\Screens\Booking\BookingEditScreen;
 use App\Orchid\Screens\Booking\BookingListScreen;
 use App\Orchid\Screens\Hotel\HotelEditScreen;
 use App\Orchid\Screens\Hotel\HotelListScreen;
+use App\Orchid\Screens\Room\RoomEditScreen;
+use App\Orchid\Screens\Room\RoomListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +144,23 @@ Route::screen('booking/{booking?}', BookingEditScreen::class)
             ->push('Bookings', route('platform.booking.list'))
             ->push('Booking edit');
     })->name('platform.booking.edit');
+
+
+Route::screen('rooms', RoomListScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Rooms');
+    })->name('platform.room.list');
+
+Route::screen('room/{room?}', RoomEditScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Rooms', route('platform.room.list'))
+            ->push('Room edit');
+    })->name('platform.room.edit');
+
 
 
 //Route::screen('idea', Idea::class, 'platform.screens.idea');

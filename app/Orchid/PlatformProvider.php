@@ -72,6 +72,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('building')
                 ->route('platform.booking.list'),
 
+            Menu::make('Rooms')
+                ->icon('building')
+                ->route('platform.room.list'),
+
             Menu::make(__('Users'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')

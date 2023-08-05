@@ -23,6 +23,7 @@ class Room extends Model
         'floor_area',
         'type',
         'price',
+        "hotel_id"
     ];
 
     public function hotel()
