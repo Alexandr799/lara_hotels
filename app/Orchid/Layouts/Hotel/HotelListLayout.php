@@ -27,15 +27,15 @@ class HotelListLayout extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('title', 'Title')
+            TD::make('id', 'ID')
                 ->render(function (Hotel $hotel) {
-                    return Link::make($hotel->title)
+                    return Link::make($hotel->id)
                         ->route(
-                            'platform.hotel.edit',
-                            ['hotel' => $hotel->id]
+                            'platform.booking.edit',
+                            ['booking' => $hotel->id]
                         );
                 }),
-
+            TD::make('title', 'Title'),
             TD::make('address', 'Address'),
             TD::make('poster_url', 'Poster'),
             TD::make('created_at', 'Created'),

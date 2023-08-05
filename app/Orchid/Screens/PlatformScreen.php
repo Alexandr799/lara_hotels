@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens;
 
+use Illuminate\Http\Request;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
@@ -14,9 +15,11 @@ class PlatformScreen extends Screen
      *
      * @return array
      */
-    public function query(): iterable
+    public function query(Request $request): iterable
     {
-        return [];
+        return [
+            'user'=> $request->user()
+        ];
     }
 
     /**
@@ -24,7 +27,8 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Get Started';
+        $name = request()->user()->name;
+        return "Hello, $name";
     }
 
     /**
@@ -32,7 +36,7 @@ class PlatformScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Welcome to your Orchid application.';
+        return 'Welcome to your admin panel.';
     }
 
     /**
@@ -53,8 +57,6 @@ class PlatformScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::view('platform::partials.update-assets'),
-            Layout::view('platform::partials.welcome'),
         ];
     }
 }

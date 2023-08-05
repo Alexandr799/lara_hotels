@@ -3,7 +3,6 @@
 namespace App\Orchid\Screens\Booking;
 
 use App\Models\Booking;
-use App\Models\Hotel;
 use Illuminate\Http\Request;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Relation;
@@ -14,7 +13,6 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Alert;
 use App\Models\Room;
 use App\Models\User;
-use Carbon\Carbon;
 
 class BookingEditScreen extends Screen
 {
@@ -50,7 +48,7 @@ class BookingEditScreen extends Screen
     public function commandBar(): array
     {
         return [
-            Button::make('Create hotel')
+            Button::make('Create')
                 ->icon('pencil')
                 ->method('create')
                 ->canSee(!$this->booking->exists),
@@ -78,38 +76,25 @@ class BookingEditScreen extends Screen
             Layout::rows([
                 Input::make('booking.price')
                     ->type('number')
-                    ->min(0)
                     ->title('Price')
                     ->placeholder('Input price for booking')
-                    ->help(
-                        'If you leave this field empty, the price
-                        will be set as the product of the price per
-                        night of the room and the number of nights
-                        '
-                    ),
+                    ->required(),
 
                 Input::make('booking.days')
                     ->type('number')
-                    ->min(1)
                     ->title('Nights count')
                     ->placeholder('Input price for booking')
-                    ->help(
-                        'Warning!! This field calculate automatic between
-                        Check-in and Check-out, but you can edit this field.
-                        Be careful not to break data logic!'
-                    ),
+                    ->required(),
 
                 DateTimer::make('booking.started_at')
                     ->format('Y-m-d')
                     ->title('Check-in')
-                    ->min(Carbon::now())
                     ->required()
                     ->placeholder('Input date check-in'),
 
                 DateTimer::make('booking.finished_at')
                     ->format('Y-m-d')
                     ->title('Check-out')
-                    ->min(Carbon::now()->addDay())
                     ->required()
                     ->placeholder('Input date check-out'),
 
@@ -130,6 +115,8 @@ class BookingEditScreen extends Screen
 
     public function create(Request $request)
     {
+        $booking = new Booking($request->get('booking'));
+        $booking->save();
 
         Alert::info('You have successfully created a booking.');
 
@@ -138,6 +125,7 @@ class BookingEditScreen extends Screen
 
     public function update(Booking $booking, Request $request)
     {
+        $booking->fill($request->get('booking'))->save();
 
         Alert::info('You have successfully created a booking.');
 

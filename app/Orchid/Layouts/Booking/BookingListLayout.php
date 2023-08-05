@@ -3,12 +3,9 @@
 namespace App\Orchid\Layouts\Booking;
 
 use App\Models\Booking;
-use App\Models\Room;
-use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
-use App\Models\User;
 
 class BookingListLayout extends Table
 {
@@ -30,7 +27,7 @@ class BookingListLayout extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('id', 'Unique id')
+            TD::make('id', 'ID')
                 ->render(function (Booking $booking) {
                     return Link::make($booking->id)
                         ->route(
@@ -43,6 +40,15 @@ class BookingListLayout extends Table
             TD::make('days', 'Nights count'),
             TD::make('started_at', 'Сheck-in'),
             TD::make('updated_at', 'Сheck-out'),
+            TD::make('updated_at', 'User')
+                ->render(function (Booking $booking) {
+                    return  $booking->user->name;
+                }),
+
+            TD::make('updated_at', 'Room')
+                ->render(function (Booking $booking) {
+                    return  $booking->room->title;
+                }),
         ];
     }
 }
