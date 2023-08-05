@@ -21,6 +21,8 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Email\EmailSenderScreen;
 use App\Orchid\Screens\Booking\BookingEditScreen;
 use App\Orchid\Screens\Booking\BookingListScreen;
+use App\Orchid\Screens\Facility\FacilityEditScreen;
+use App\Orchid\Screens\Facility\FacilityListScreen;
 use App\Orchid\Screens\Hotel\HotelEditScreen;
 use App\Orchid\Screens\Hotel\HotelListScreen;
 use App\Orchid\Screens\Room\RoomEditScreen;
@@ -162,5 +164,19 @@ Route::screen('room/{room?}', RoomEditScreen::class)
     })->name('platform.room.edit');
 
 
+Route::screen('facilities', FacilityListScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Facilities');
+    })->name('platform.facility.list');
+
+Route::screen('facility/{facility?}', FacilityEditScreen::class)
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('Facilities', route('platform.room.list'))
+            ->push('Facility edit');
+    })->name('platform.facility.edit');
 
 //Route::screen('idea', Idea::class, 'platform.screens.idea');

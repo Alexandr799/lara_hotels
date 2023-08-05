@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Orchid\Layouts\Hotel;
+namespace App\Orchid\Layouts\Facility;
 
-use App\Models\Hotel;
+use App\Models\Facility;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 
-class HotelListLayout extends Table
+class FacilityListLayout extends Table
 {
     /**
      * Data source.
@@ -17,7 +17,7 @@ class HotelListLayout extends Table
      *
      * @var string
      */
-    protected $target = 'hotels';
+    protected $target = 'facilities';
 
     /**
      * Get the table cells to be displayed.
@@ -28,18 +28,15 @@ class HotelListLayout extends Table
     {
         return [
             TD::make('id', 'ID')
-                ->render(function (Hotel $hotel) {
-                    return Link::make($hotel->id)
+                ->render(function (Facility $facility) {
+                    return Link::make($facility->id)
                         ->route(
-                            'platform.hotel.edit',
-                            ['hotel' => $hotel->id]
+                            'platform.facility.edit',
+                            ['facility' => $facility->id]
                         );
                 }),
+
             TD::make('title', 'Title'),
-            TD::make('address', 'Address'),
-            TD::make('poster_url', 'Poster'),
-            TD::make('created_at', 'Created'),
-            TD::make('updated_at', 'Last edit'),
         ];
     }
 }
