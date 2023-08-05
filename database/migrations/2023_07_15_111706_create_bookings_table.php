@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->timestamp('started_at');
-            $table->timestamp('finished_at');
+            $table->date('started_at');
+            $table->date('finished_at');
             $table->integer('days');
             $table->integer('price');
             $table->foreignIdFor(Room::class)

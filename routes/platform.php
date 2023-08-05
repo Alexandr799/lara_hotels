@@ -122,12 +122,13 @@ Route::screen('hotels', HotelListScreen::class)
 Route::screen('hotel/{hotel?}', HotelEditScreen::class)
     ->breadcrumbs(function (Trail $trail) {
         return $trail
-            ->parent('platform.hotel.list')
+            ->parent('platform.index')
+            ->push('Hotels', route('platform.hotel.list'))
             ->push('Hotels edit');
     })->name('platform.hotel.edit');
 
 
-Route::screen('booking', BookingListScreen::class)
+Route::screen('bookings', BookingListScreen::class)
     ->breadcrumbs(function (Trail $trail) {
         return $trail
             ->parent('platform.index')
@@ -137,7 +138,8 @@ Route::screen('booking', BookingListScreen::class)
 Route::screen('booking/{booking?}', BookingEditScreen::class)
     ->breadcrumbs(function (Trail $trail) {
         return $trail
-            ->parent('platform.booking.list')
+            ->parent('platform.index')
+            ->push('Bookings', route('platform.booking.list'))
             ->push('Booking edit');
     })->name('platform.booking.edit');
 
