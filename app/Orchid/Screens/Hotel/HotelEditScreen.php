@@ -2,9 +2,11 @@
 
 namespace App\Orchid\Screens\Hotel;
 
+use App\Models\Facility;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Support\Facades\Layout;
 use Orchid\Screen\Screen;
@@ -22,7 +24,8 @@ class HotelEditScreen extends Screen
     public function query(Hotel $hotel): iterable
     {
         return [
-            'hotel' => $hotel
+            'hotel' => $hotel,
+            'facilities' =>  Facility::pluck('title', 'id')->all(),
         ];
     }
 
@@ -92,6 +95,13 @@ class HotelEditScreen extends Screen
                     ->maxlength(500)
                     ->required()
                     ->placeholder('Input hotel address'),
+
+                Relation::make('hotel.facilities')
+                    ->title('Facilities')
+                    ->multiple()
+                    ->placeholder('Facilities input')
+                    ->fromModel(Facility::class, 'title', 'id'),
+
             ])
         ];
     }
@@ -101,6 +111,10 @@ class HotelEditScreen extends Screen
         $hotel = new Hotel($request->get('hotel'));
         $hotel->save();
 
+        $facilities = $request->get('hotel')['facilities'] ?? [];
+        $hotel->facilities()->detach();
+        $hotel->facilities()->attach($facilities);
+
         Alert::info('You have successfully created a hotel.');
 
         return redirect()->route('platform.hotel.list');
@@ -109,6 +123,10 @@ class HotelEditScreen extends Screen
     public function update(Hotel $hotel, Request $request)
     {
         $hotel->fill($request->get('hotel'))->save();
+
+        $facilities = $request->get('hotel')['facilities'] ?? [];
+        $hotel->facilities()->detach();
+        $hotel->facilities()->attach($facilities);
 
         Alert::info('You have successfully created a hotel.');
 

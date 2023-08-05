@@ -84,7 +84,7 @@ class RoomEditScreen extends Screen
                     ->title('Hotel')
                     ->required()
                     ->placeholder('Choise hotel')
-                    ->fromModel(Hotel::class, 'title', 'id'),
+                    ->fromModel(Hotel::class, 'title'),
 
                 TextArea::make('room.description')
                     ->rows(3)
