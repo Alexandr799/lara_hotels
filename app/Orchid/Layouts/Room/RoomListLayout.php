@@ -36,15 +36,16 @@ class RoomListLayout extends Table
                             ['room' => $room->id]
                         );
                 }),
-
             TD::make('title', 'Title'),
+            TD::make('poster_url', 'Poster')
+                ->render(function (Room $room) {
+                    $url = $room->poster_url;
+                    return "<img width='100' src='$url'/>";
+                }),
             TD::make('floor_area', 'Floor Area'),
             TD::make('type', 'Type'),
             TD::make('price', 'Price'),
-            TD::make('hotel_id', 'Hotel')
-                ->render(function (Room $room) {
-                    return  $room->hotel->title;
-                }),
+            TD::make('price', 'Price')
         ];
     }
 }

@@ -37,7 +37,11 @@ class HotelListLayout extends Table
                 }),
             TD::make('title', 'Title'),
             TD::make('address', 'Address'),
-            TD::make('poster_url', 'Poster'),
+            TD::make('poster_url', 'Poster')
+                ->render(function (Hotel $hotel) {
+                    $url = $hotel->poster_url;
+                    return "<img width='100' src='$url'/>";
+                }),
             TD::make('created_at', 'Created'),
             TD::make('updated_at', 'Last edit'),
         ];

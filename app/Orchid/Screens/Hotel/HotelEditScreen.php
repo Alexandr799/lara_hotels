@@ -117,7 +117,7 @@ class HotelEditScreen extends Screen
         $file = $request->file('hotel.poster_url');
         $name = uniqid() . '_' . $file->getClientOriginalName();
         $file->storeAs('public',  $name);
-        $new_poster_url = "storage/$name";
+        $new_poster_url = "/storage/$name";
         $data['poster_url'] = $new_poster_url;
 
         $hotel = new Hotel($data);
@@ -143,14 +143,10 @@ class HotelEditScreen extends Screen
             $file = $request->file('hotel.poster_url');
             $name = uniqid() . '_' . $file->getClientOriginalName();
             $file->storeAs('public',  $name);
-            $new_poster_url = "storage/$name";
+            $new_poster_url = "/storage/$name";
 
-            $filename = str_replace('storage/', '', $hotel->poster_url);
+            $filename = str_replace('/storage/', '', $hotel->poster_url);
             Storage::delete('public/' . $filename);
-            if (file_exists(public_path($hotel->poster_url))) {
-                unlink(public_path($hotel->poster_url));
-            }
-
             $data['poster_url'] = $new_poster_url;
         } else {
             unset($data['poster_url']);
@@ -170,6 +166,16 @@ class HotelEditScreen extends Screen
 
     public function remove(Hotel $hotel)
     {
+        $rooms_url = $hotel->rooms()->pluck('poster_url')->toArray();
+        foreach ($rooms_url as $url) {
+            $filename = str_replace('/storage/', '', $url);
+            Storage::delete('public/' . $filename);
+        }
+
+        $filename = str_replace('/storage/', '', $hotel->poster_url);
+        Storage::delete('public/' . $filename);
+
+
         $hotel->delete();
 
         Alert::info('You have successfully deleted the hotel.');

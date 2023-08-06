@@ -1,6 +1,6 @@
 <div {{ $attributes->merge(['class' => 'flex flex-col md:flex-row shadow-md']) }}>
     <div class="h-full w-full md:w-2/5">
-        <div class="h-64 w-full bg-cover bg-center bg-no-repeat" style="background-image: url({{ $room->poster_url }})">
+        <div class="h-64 w-full bg-cover bg-center bg-no-repeat" style="background-image: url('{{ $room->poster_url }}')">
         </div>
     </div>
     <div class="p-4 w-full md:w-3/5 flex flex-col justify-between">

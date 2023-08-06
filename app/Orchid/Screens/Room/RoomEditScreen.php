@@ -6,6 +6,7 @@ use App\Models\Facility;
 use App\Models\Room;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\TextArea;
@@ -102,7 +103,7 @@ class RoomEditScreen extends Screen
 
                 Input::make('room.poster_url')
                     ->title('Poster URL')
-                    ->maxlength(100)
+                    ->type('file')
                     ->placeholder('Input poster'),
 
                 Input::make('room.floor_area')
@@ -129,7 +130,20 @@ class RoomEditScreen extends Screen
 
     public function create(Request $request)
     {
-        $room = new Room($request->get('room'));
+        $request->validate([
+            'room.poster_url' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048',
+        ]);
+
+        $data = $request->get('room');
+        $file = $request->file('room.poster_url');
+        $name = uniqid() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public',  $name);
+        $new_poster_url = "/storage/$name";
+        $data['poster_url'] = $new_poster_url;
+
+
+
+        $room = new Room($data);
         $room->save();
 
 
@@ -144,7 +158,25 @@ class RoomEditScreen extends Screen
 
     public function update(Room $room, Request $request)
     {
-        $room->fill($request->get('room'))->save();
+        $request->validate([
+            'room.poster_url' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
+        ]);
+
+        $data = $request->get('room');
+        if ($request->hasFile('room.poster_url')) {
+            $file = $request->file('room.poster_url');
+            $name = uniqid() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public',  $name);
+            $new_poster_url = "/storage/$name";
+
+            $filename = str_replace('/storage/', '', $room->poster_url);
+            Storage::delete('public' . $filename);
+            $data['poster_url'] = $new_poster_url;
+        } else {
+            unset($data['poster_url']);
+        }
+
+        $room->fill($data)->save();
 
         $facilities = $request->get('room')['facilities'] ?? [];
         $room->facilities()->detach();
@@ -157,6 +189,11 @@ class RoomEditScreen extends Screen
 
     public function remove(Room $room)
     {
+
+        $filename = str_replace('/storage/', '', $room->poster_url);
+        Storage::delete('public/' . $filename);
+
+
         $room->delete();
 
         Alert::info('You have successfully deleted the room.');
