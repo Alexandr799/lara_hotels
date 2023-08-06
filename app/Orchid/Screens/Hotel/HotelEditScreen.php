@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\Hotel;
 use App\Models\Facility;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\TextArea;
@@ -86,8 +87,8 @@ class HotelEditScreen extends Screen
                     ->placeholder('Input description hotel'),
 
                 Input::make('hotel.poster_url')
-                    ->title('post url')
-                    ->maxlength(100)
+                    ->type('file')
+                    ->title('Post url')
                     ->placeholder('Input poster'),
 
                 Input::make('hotel.address')
@@ -108,7 +109,18 @@ class HotelEditScreen extends Screen
 
     public function create(Request $request)
     {
-        $hotel = new Hotel($request->get('hotel'));
+        $request->validate([
+            'hotel.poster_url' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048',
+        ]);
+
+        $data = $request->get('hotel');
+        $file = $request->file('hotel.poster_url');
+        $name = uniqid() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public',  $name);
+        $new_poster_url = "storage/$name";
+        $data['poster_url'] = $new_poster_url;
+
+        $hotel = new Hotel($data);
         $hotel->save();
 
         $facilities = $request->get('hotel')['facilities'] ?? [];
@@ -122,7 +134,29 @@ class HotelEditScreen extends Screen
 
     public function update(Hotel $hotel, Request $request)
     {
-        $hotel->fill($request->get('hotel'))->save();
+        $request->validate([
+            'hotel.poster_url' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
+        ]);
+
+        $data = $request->get('hotel');
+        if ($request->hasFile('hotel.poster_url')) {
+            $file = $request->file('hotel.poster_url');
+            $name = uniqid() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public',  $name);
+            $new_poster_url = "storage/$name";
+
+            $filename = str_replace('storage/', '', $hotel->poster_url);
+            Storage::delete('public/' . $filename);
+            if (file_exists(public_path($hotel->poster_url))) {
+                unlink(public_path($hotel->poster_url));
+            }
+
+            $data['poster_url'] = $new_poster_url;
+        } else {
+            unset($data['poster_url']);
+        }
+
+        $hotel->fill($data)->save();
 
         $facilities = $request->get('hotel')['facilities'] ?? [];
         $hotel->facilities()->detach();
