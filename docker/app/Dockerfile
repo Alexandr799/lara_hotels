@@ -1,43 +1,25 @@
-# Указываем базовый образ PHP 8.2-fpm
 FROM php:8.2-fpm
 
-# Обновляем пакеты и устанавливаем необходимые зависимости
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    zip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql gd zip
+      apt-utils \
+      libpq-dev \
+      libpng-dev \
+      libzip-dev \
+      zip unzip \
+      git && \
+      docker-php-ext-install pdo_mysql && \
+      docker-php-ext-install bcmath && \
+      docker-php-ext-install gd && \
+      docker-php-ext-install zip && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Устанавливаем Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
 
-# Создаем рабочую директорию
-WORKDIR /var/www
+# Install composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN curl -sS https://getcomposer.org/installer | php -- \
+    --filename=composer \
+    --install-dir=/usr/local/bin
 
-# Копируем файлы Laravel приложения в контейнер
-COPY . .
-
-# Устанавливаем зависимости Laravel
-RUN composer install
-
-# Опционально: Выполняем миграции и сиды, если это необходимо
-RUN php artisan migrate
-RUN php artisan db:seed
-
-# Указываем пользователя и группу для PHP-FPM
-# (это может потребоваться, чтобы избежать проблем с правами доступа)
-USER www-data
-
-# Опционально: Указываем порт, на котором будет работать PHP-FPM
-# EXPOSE 9000
-
-# Опционально: Запускаем PHP-FPM
-# CMD ["php-fpm"]
-
-# Опционально: Если вы используете Nginx вместо Apache,
-# то можете настроить его в этом файле.
+WORKDIR /var/www/hotels_laravel
