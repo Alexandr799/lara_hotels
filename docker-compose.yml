@@ -2,7 +2,7 @@ version: '3'
 
 services:
     nginx:
-        image: nginx
+        image: nginx:1.24
         volumes:
             - ./:/var/www/hotels_laravel
             - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
@@ -23,11 +23,13 @@ services:
     db:
         image: mysql:8.0
         restart: always
+        env_file:
+            - .env
         volumes:
             - ./tmp/db/:/var/lib/mysql
         environment:
-            - MYSQL_DATABASE=lara_hotels
-            - MYSQL_ROOT_PASSWORD=Arsenal799!
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
         ports:
             - "8081:3306"
         command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
