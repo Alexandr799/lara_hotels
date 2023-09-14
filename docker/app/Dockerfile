@@ -15,8 +15,6 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
-
 # Install composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -25,7 +23,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 WORKDIR /var/www/hotels_laravel
 
-COPY ./docker/nginx/conf.d/* /etc/nginx/sites-available/
+COPY ./docker/nginx/* /etc/nginx/sites-available/
 
 RUN ln -s /etc/nginx/sites-available/hotels.nginx.conf /etc/nginx/sites-enabled/
 
@@ -35,7 +33,5 @@ COPY . .
 
 RUN chmod -R 755 /var/www/hotels_laravel/storage \
     && chown -R www-data:www-data /var/www/hotels_laravel/storage
-
-# CMD ["nginx", "-g", "daemon off;"]
 
 CMD service nginx start && php-fpm

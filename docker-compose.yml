@@ -1,27 +1,15 @@
 version: '3'
 
 services:
-    # nginx:
-    #     image: nginx:1.24
-    #     volumes:
-    #         - ./:/var/www/hotels_laravel
-    #         - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-    #     ports:
-    #         - "8080:80"
-    #     container_name: nginx_app
-    #     depends_on:
-    #       - app
     app:
         build:
             context: .
             dockerfile: docker/app/Dockerfile
         volumes:
             - ./:/var/www/hotels_laravel
-            # - ./docker/nginx/conf.d/:/etc/nginx/sites-available/
         container_name: app
         ports:
             - "8083:80"
-            - ":9000"
         depends_on:
             - db
     db:
