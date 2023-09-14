@@ -36,5 +36,6 @@ COPY . .
 RUN chmod -R 755 /var/www/hotels_laravel/storage \
     && chown -R www-data:www-data /var/www/hotels_laravel/storage
 
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
 
+CMD service nginx start && php-fpm
